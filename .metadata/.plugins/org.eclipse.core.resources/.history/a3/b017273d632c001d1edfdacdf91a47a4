@@ -1,0 +1,72 @@
+import java.net.*;
+import java.io.*;
+
+
+public class Server {
+	ServerSocket server;
+	Socket client;
+	BufferedReader br;
+	PrintWriter out;
+	
+	Server()
+	{
+		try {
+			server = new ServerSocket(7777);
+			System.out.println("server is ready to accept connection");
+			System.out.println("waiting.....");
+			client = server.accept();
+			
+			
+			//to read data from client i.e socket
+			br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			//to write data and send to client since stream is uni directional.
+			out = new PrintWriter(client.getOutputStream());
+			
+			StartReading();
+			StartWriting();
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public void StartReading()
+	{
+		// to read data simulatenously
+		Runnable r1 = ()->{
+			System.out.println("Reader started...");
+			
+			while(true)
+			{
+				String read="";
+				try {
+					read = br.readLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(read.equals("quit"))
+				{
+					System.out.println("Client Terminated the chat");
+				}
+			}
+		};
+		
+	}
+	
+	public void StartWriting()
+	{
+		
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		System.out.println("This is server...going to start Server");
+		// will call constructor
+		new Server();
+	}
+
+}

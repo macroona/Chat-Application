@@ -1,0 +1,87 @@
+
+import java.io.*;
+import java.net.*;
+
+public class Client {
+	Socket client;
+	BufferedReader br;
+	PrintWriter out;
+	Client()
+	{
+		
+		try {
+			System.out.println("Sendong request to server");
+			client = new Socket("127.0.0.1",7777);
+			System.out.println("Connection done");
+			
+			//to read data from client i.e socket
+			br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			//to write data and send to client since stream is uni directional.
+			out = new PrintWriter(client.getOutputStream());
+			
+			StartReading();
+			StartWriting();
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	public void StartReading()
+	{
+		// to read data simulatenously
+		Runnable r1 = ()->{
+			System.out.println("Reader started...");
+			
+			while(true)
+			{
+			
+				try {
+					String msg = br.readLine();
+				
+				if(msg.equals("quit"))
+				{
+					System.out.println("Client Terminated the chat");
+					break;
+				}
+				System.out.println("Client:"+msg);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		new Thread(r1).start();
+		
+	}
+	
+
+	public void StartWriting()
+	{
+		Runnable r2 = ()->
+		{
+			System.out.println("Write started");
+			while(true)
+			{
+				try {
+					BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
+					String content = br1.readLine();
+					
+					out.println(content);
+					out.flush();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+		};
+		new Thread(r2).start();
+	}
+	
+	public static void main(String[] args)
+	{
+		System.out.println("This is client.....");
+	}
+
+}

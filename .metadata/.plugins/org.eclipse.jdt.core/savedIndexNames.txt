@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+D:\Chat Application\.metadata\.plugins\org.eclipse.jdt.core
+75931715.index
+2786061894.index
+1865797976.index
